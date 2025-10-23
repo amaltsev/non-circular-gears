@@ -240,11 +240,13 @@ def sampling_optimization(drive_contour: np.ndarray, driven_contour: np.ndarray,
                           keep_count: int, sampling_accuracy: int, iteration_count: int,
                           debugging_suite: ReportingSuite, torque_weight: float = 0.0, k: int = 1,
                           mismatch_penalty=0.5) -> List[Tuple[float, Polar_T]]:
+
     logger.info(f'Initiating Sampling Optimization with torque_weight = {torque_weight},'
-                f' mismatch_penalty = {mismatch_penalty}')
-    logger.info(f'k={k}')
+                f' mismatch_penalty = {mismatch_penalty}, transfer ratio (k) = {k}')
+
     drive_polygon = Polygon(drive_contour)
     driven_polygon = Polygon(driven_contour)
+
     min_x, min_y, max_x, max_y = drive_polygon.bounds
     window_pairs = (min_x, max_x, min_y, max_y)
     min_x, min_y, max_x, max_y = driven_polygon.bounds

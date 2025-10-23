@@ -95,24 +95,34 @@ def get_teeth_idx(i: int, _tooth_samples):
 def add_teeth(center, center_distance, debugger, drive, drive_model, plotter):
     drive = counterclockwise_orientation(drive)
     normals = getNormals(drive, None, center, normal_filter=True)
+
+    ### print(f'=== add_teeth(tooth_height={drive_model.tooth_height}, tooth_num={drive_model.tooth_num})')
+
     drive = addToothToContour(drive, center, center_distance, normals, height=drive_model.tooth_height,
                               tooth_num=drive_model.tooth_num,
                               plt_axis=None, consider_driving_torque=False,
                               consider_driving_continue=False)
+
     plotter.draw_contours(debugger.file_path('drive_with_teeth_before.png'), [('input_driven', drive)], None)
 
     drive = Polygon(drive).buffer(0).simplify(0.000)
+
     if drive.geom_type == 'MultiPolygon':
-        drive = max(drive, key=lambda a: a.area)
+        drive = max(drive.geoms, key=lambda a: a.area)
+
     drive = np.array(drive.exterior.coords)
     plotter.draw_contours(debugger.file_path('drive_with_teeth.png'), [('input_driven', drive)], None)
+
     return drive
 
 
 def addToothToContour(contour: np.array, center, center_dist, normals, height: int, tooth_num: int, plt_axis,
                       consider_driving_torque=False, consider_driving_continue=False):
     n = len(contour)
-    assert n % tooth_num == 0
+
+    if n % tooth_num != 0:
+        raise RuntimeError(f'Contour size {len(contour)} is not evenly divisible by tooth number {tooth_num}')
+
     samplenum_per_teeth = n / tooth_num
 
     polar_contour = [np.linalg.norm(p - center) for p in contour]

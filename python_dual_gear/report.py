@@ -8,25 +8,35 @@ import sys
 from plot.qt_plot import Plotter
 from matplotlib.figure import Figure
 
-
 class Reporter:
-    pre_fix = 'debug'
+    pre_fix = 'debug'       # FIXME: Sync with main_program.py usage
 
     def __init__(self, model_name: Union[str, Iterable[str]]):
         if isinstance(model_name, str):
             self.model_name = model_name
         else:
             self.model_name = '_'.join(model_name)
+
         self._debug_dir_name = os.path.join(os.path.dirname(__file__), Reporter.pre_fix,
                                             datetime.datetime.fromtimestamp(time.time()).strftime(
                                                 f'%Y-%m-%d_%H-%M-%S_{self.model_name}'))
+
         self._debug_dir_name = os.path.join(os.path.dirname(__file__), self._debug_dir_name)
+
         logging.info("=================== Program Start ====================")
         logging.info(f"Output directory: {self._debug_dir_name}")
+
         self._init_debug_dir()
 
     def file_path(self, file_name):
-        return os.path.join(self._debug_dir_name, file_name)
+        """
+        Return file name as is when there is a path (even if './foo'), otherwise
+        return a path into 'debug/'.
+        """
+        if os.path.split(file_name)[0] == '':
+            return os.path.join(self._debug_dir_name, file_name)
+        else:
+            return file_name
 
     def get_root_debug_dir_name(self):
         return self._debug_dir_name
@@ -39,6 +49,7 @@ class Reporter:
 
     def _init_debug_dir(self):
         # init root debug dir
+
         if not os.path.exists(Reporter.pre_fix):
             os.mkdir(Reporter.pre_fix)
         os.mkdir(self._debug_dir_name)
@@ -47,6 +58,12 @@ class Reporter:
         logging.info("Directory %s established" % os.path.join(self._debug_dir_name, "math_rotate"))
         os.mkdir(os.path.join(self._debug_dir_name, "cut_rotate"))
         logging.info("Directory %s established" % os.path.join(self._debug_dir_name, "cut_rotate"))
+
+        stable_dir = os.path.join(os.path.abspath(os.path.join(self._debug_dir_name, '..')), 'recent')
+        if os.path.islink(stable_dir):
+            os.unlink(stable_dir)
+        os.symlink(self._debug_dir_name, stable_dir, target_is_directory=True)
+        logging.info(f"Stable link in '{stable_dir}'")
 
 
 class SubprocessReporter:

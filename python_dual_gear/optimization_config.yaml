@@ -9,3 +9,6 @@ sampling_count:               # the (W, H) pair describing how we split
   - 1
 torque_weight: 0              # the weight for minimizing maximum torque
 mismatch_penalty: 0.5         # k > 1 only: penalty we give for a shape whose head and tail does not meet each other
+
+tooth_height: 0.05            # Relative tooth height
+tooth_num: 32                 # Number of teeth to cut

@@ -19,10 +19,18 @@ from util_functions import save_contour
 
 def optimize_center(cart_input_drive, cart_input_driven, debugger, opt_config, plotter, k=1):
     debug_suite = ReportingSuite(debugger, plotter, plt.figure(figsize=(16, 9)))
-    results = sampling_optimization(cart_input_drive, cart_input_driven, opt_config['sampling_count'],
-                                    opt_config['keep_count'], opt_config['resampling_accuracy'],
-                                    opt_config['max_sample_depth'], debug_suite, opt_config['torque_weight'], k=k,
-                                    mismatch_penalty=opt_config['mismatch_penalty'])
+
+    results = sampling_optimization(cart_input_drive,
+                                    cart_input_driven,
+                                    sampling_count = opt_config['sampling_count'],
+                                    keep_count = opt_config['keep_count'],
+                                    sampling_accuracy = opt_config['resampling_accuracy'],
+                                    iteration_count = opt_config['max_sample_depth'],
+                                    debugging_suite = debug_suite,
+                                    torque_weight = opt_config['torque_weight'],
+                                    k=k,
+                                    mismatch_penalty = opt_config['mismatch_penalty'])
+
     results.sort(key=lambda total_score, *_: total_score)
     best_result = results[0]
     logging.info(f'Best result with score {best_result[0]}')

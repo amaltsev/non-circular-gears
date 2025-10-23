@@ -17,11 +17,30 @@ This project is written in python, and is based on the following packages:
 - openmesh
 - pyyaml
 
-## How to use the code:
-The entry of the code is the "main" function in the file "main_program.py", in which the function takes two shapes as inputs. 
-We prepare a bunch of example input shapes in the directory "silhouette". To use any one of them as the input, you just need to type the file name into the function "find_model_by_name".
-Once the program is running, a new directory,  *python_dual_gear/debug/yyyy-mm-dd_hh-mm-ss_shapenames*, will be created.
-You can find all the intermediate and final results inside that folder.
+## Quick start
+
+- Change into `python_dual_gear` folder
+- Run `python main_program.py samples/task_squares.yml`
+- View `task_squares.svg`
+- Copy and adjust the task, try again
+
+The task is loaded over the defaults in `optimization_config.yaml`
+file. For a quick and dirty shapes override, use this:
+
+```
+python main_program.py samples/task_generic.yml disney/minnie disney/mickey
+```
+
+To run without graphical output, use this (on Linux):
+```
+QT_QPA_PLATFORM=offscreen python main_program.py samples/task_squares.yml
+```
+
+More details and intermediate images are stored in timestamped
+subfolders of `debug` folder, with `recent` linking to the most recent
+run.
+
+For more details and parameters explanation, refer to the source code.
 
 ## Questions
 If you met problems, or have questions on this project, don't hesitate to contact us at 

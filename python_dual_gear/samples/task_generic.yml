@@ -1,0 +1,10 @@
+# Copy and edit this file for specific shapes, or provide model
+# overrides on the command line.
+#
+drive_model:    geometry/triangle   # Drive/main model (from 'silhouette' folder)
+driven_model:   geometry/triangle   # Driven/cut model
+#
+tooth_height:   0.03                # Relative tooth height
+tooth_num:      32                  # Number of teeth to cut
+output_type:    svg                 # Output 'svg' or 'obj'
+output_file:    ./task_generic.svg  # Output file, in debug if there is no path

@@ -20,7 +20,7 @@ def get_shape_contour(model: Model, uniform: bool, plots: Union[Iterable[Axes], 
             sub_folder, model_name = model.name.split(')')
             sub_folder = sub_folder[1:]
             silhouette_file = find_silhouette_file(model_name, os.path.abspath(
-                os.path.join(os.path.dirname(__file__), '../silhouette/' + sub_folder)))
+                os.path.join(os.path.dirname(__file__), '../../silhouette/' + sub_folder)))
         else:
             silhouette_file = find_silhouette_file(model.name)
         if silhouette_file is None:

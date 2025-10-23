@@ -29,9 +29,15 @@ def _plot_polygon(polygons, axis):
 
 
 def _draw_single_polygon(polygon):
-    if not isinstance(polygon, MultiPolygon):
-        polygon = polygon,
-    for poly in polygon:
+    # ensure iterable of Polygon objects
+    if isinstance(polygon, Polygon):
+        polygons = [polygon]
+    elif isinstance(polygon, MultiPolygon):
+        polygons = list(polygon.geoms)
+    else:
+        raise TypeError(f"Unexpected geometry type: {polygon.geom_type}")
+
+    for poly in polygons:
         xs, ys = poly.exterior.xy
         plt.plot(xs, ys)
 
@@ -149,7 +155,10 @@ def rotate_and_carve(cart_drive, center, center_distance, debugger, drive_model,
                                                         debugger=debugger if save_anim else None,
                                                         replay_animation=replay_anim, plotter=plotter)
     poly_driven_gear = translate(poly_driven_gear, center_distance).buffer(0).simplify(1e-5)  # as in generate_gear
+
     if poly_driven_gear.geom_type == 'MultiPolygon':
-        poly_driven_gear = max(poly_driven_gear, key=lambda a: a.area)
+        poly_driven_gear = max(poly_driven_gear.geoms, key=lambda a: a.area)
+
     cart_driven_gear = np.array(poly_driven_gear.exterior.coords)
+
     return cart_driven_gear

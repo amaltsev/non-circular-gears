@@ -65,7 +65,7 @@ def getMaxIntersDist(p: Point, theta, poly: Polygon, MAX_R):
     ring = LineString(list(poly.exterior.coords))
     inters_pt = ring.intersection(LineString([p, outer_point]))
     if isinstance(inters_pt, shapely.geometry.multipoint.MultiPoint):
-        return max([p.distance(ip) for ip in inters_pt])
+        return max([p.distance(ip) for ip in inters_pt.geoms])
     else:
         return p.distance(inters_pt)
 

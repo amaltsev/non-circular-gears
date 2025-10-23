@@ -186,7 +186,8 @@ def draw_cross(axis):
 
 
 def generate_3D_with_axles(distance: float, filename_drive: str, filename_driven: str, drive_axis: Tuple[float, float],
-                           driven_axis: Tuple[float, float], debugger: Optional[Reporter], thickness=7.76):
+                           driven_axis: Tuple[float, float], debugger: Optional[Reporter],
+                           thickness=7.76, drive_mesh_file='drive_gear_mesh.obj', driven_mesh_file='driven_gear_mesh.obj'):
     """
     :param distance: distance between axes of two gears
     (distance between 2 adjacent horizontal holes is 7.97, vertical holes is 9.6)
@@ -209,9 +210,9 @@ def generate_3D_with_axles(distance: float, filename_drive: str, filename_driven
     drive_eroded = Polygon(exterior_drive_scale).buffer(0)
     driven_eroded = Polygon(exterior_driven_scale).buffer(0)
     if drive_eroded.geom_type == 'MultiPolygon':
-        drive_eroded = max(drive_eroded, key=lambda a: a.area)
+        drive_eroded = max(drive_eroded.geoms, key=lambda a: a.area)
     if driven_eroded.geom_type == 'MultiPolygon':
-        driven_eroded = max(driven_eroded, key=lambda a: a.area)
+        driven_eroded = max(driven_eroded.geoms, key=lambda a: a.area)
     exterior_drive_eroded = drive_eroded.exterior.coords
     exterior_driven_eroded = driven_eroded.exterior.coords
     drive_axis_scale = Point(drive_axis[0] * scaling_ratio, drive_axis[1] * scaling_ratio)
@@ -221,9 +222,9 @@ def generate_3D_with_axles(distance: float, filename_drive: str, filename_driven
     if debugger is None:
         destination_directory = os.path.dirname(filename_drive)
         debugger = destination_directory
-    generate_3d_mesh_hole(debugger, 'drive_gear_mesh.obj', np.array(exterior_drive_eroded), np.array(interior_drive),
+    generate_3d_mesh_hole(debugger, drive_mesh_file, np.array(exterior_drive_eroded), np.array(interior_drive),
                           thickness)
-    generate_3d_mesh_hole(debugger, 'driven_gear_mesh.obj', np.array(exterior_driven_eroded), np.array(interior_driven),
+    generate_3d_mesh_hole(debugger, driven_mesh_file, np.array(exterior_driven_eroded), np.array(interior_driven),
                           thickness)
 
 
