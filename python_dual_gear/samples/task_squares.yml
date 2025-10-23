@@ -1,0 +1,6 @@
+drive_model:    geometry/square     # Drive model (from 'silhouette' folder)
+driven_model:   geometry/square     # Driven model
+tooth_height:   0.035               # Relative tooth height
+tooth_num:      32                  # Number of teeth to cut
+output_type:    svg                 # Output 'svg' or 'obj'
+output_file:    ./task_squares.svg  # Output file, in debug if there is no path
